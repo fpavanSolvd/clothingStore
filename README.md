@@ -3,6 +3,33 @@
 ## Task
 Create an online clothing store where customers can search for specific clothing items in their size. The system should provide a list of available products matching the search criteria.
 
+## Table of Contents
+
+- [Authentication](#authentication)
+- [`api/v1/users`](#apiv1users-)
+  - [`GET api/v1/users`](#get-apiv1users)
+  - [`GET api/v1/users/:userId`](#get-apiv1usersuserId)
+  - [`PUT api/v1/users/:userId`](#put-apiv1usersuserId)
+  - [`POST api/v1/users/register`](#post-apiv1usersregister)
+  - [`POST api/v1/users/login`](#post-apiv1userslogin)
+  - [`DELETE api/v1/users/:userId`](#delete-apiv1usersuserId)
+- [`api/v1/products`](#apiv1products-)
+  - [`GET api/v1/products`](#get-apiv1products)
+  - [`GET api/v1/products/:productId`](#get-apiv1productsproductId)
+  - [`PUT api/v1/products/:productId`](#put-apiv1productsproductId)
+  - [`POST api/v1/products`](#post-apiv1products)
+  - [`DELETE api/v1/products/:productId`](#delete-apiv1productsproductId)
+- [`api/v1/products/:productId/options`](#-apiv1productsproductIdoptions-)
+  - [`POST api/v1/products/:productId/options`](#post-apiv1productsproductIdoptions)
+  - [`DELETE api/v1/products/:productId/options/:color`](#delete-apiv1/productsproductIdoptionscolor)
+- [`api/v1/carts`](#apiv1carts-)
+  - [`POST api/v1/carts/:userId`](#post-apiv1cartsuserId)
+  - [`PUT api/v1/carts/:cartId`](#put-apiv1cartscartId)
+  - [`GET api/v1/carts/:cartId`](#get-apiv1cartscartId)
+  - [`DELETE api/v1/carts/:cartId`](#DELETE-apiv1cartscartId)
+  - [`DELETE api/v1/carts/:cartId/buy`](#delete-apiv1cartscartIdbuy)
+
+
 ## Authentication
 
 This API uses jwt for authentication, this means that once a user is logged in using the [login request](###`POST-api/v1/users/login`) the returned token must be included in **all** future requests as a header named `x-auth-token` or `Authorization`. Each time the user makes a request the token will de validated. If there is a problem with authentication user will receive a `HTTP 401 UNAUTHORIZED` error.
@@ -128,11 +155,15 @@ This API uses jwt for authentication, this means that once a user is logged in u
 
     Logins a user validating email and password. If data is correct a jwt token will be generated and returned.
     
-    Body should include required properties. 
+    Body should include required properties for signin and for the jwt payload. It's important to note that the hashed password will **not** be included in the jwt token.
     ```json
     {
-        "email": "john.doe@example.com",
-        "password": "hashedPassword"
+        "iss": "fpavanClothingStore",
+        "sub": "3",
+        "email": "John Doe",
+        "name": "john.doe@example.com",
+        "password": "hashedPassword",
+        "exp": 1598607723
     }
     ```
     ```json
@@ -145,7 +176,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
     If some part of the request body is invalid or missing
     HTTP 400 BAD REQUEST
     {
-        "errors": "Request must include email and password"
+        "errors": "Request must include email and password along with jwt payload requirements: sub, iss, exp"
     }
 
     If email and/or password are incorrect

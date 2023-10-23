@@ -32,7 +32,7 @@ Create an online clothing store where customers can search for specific clothing
 
 ## Authentication
 
-This API uses jwt for authentication, this means that once a user is logged in using the [login request](###`POST-api/v1/users/login`) the returned token must be included in **all** future requests as a header named `x-auth-token` or `Authorization`. Each time the user makes a request the token will de validated. If there is a problem with authentication user will receive a `HTTP 401 UNAUTHORIZED` error.
+This API uses jwt for authentication, this means that once a user is logged in using the [login request](###`POST-api/v1/users/login`) the returned token must be included in **all** future requests as a header named `x-auth-token` or `Authorization`. Each time the user makes a request the token will de validated. If there is a problem with authentication user will receive a `HTTP 401 UNAUTHORIZED` error. Each generated token is valid for 1 hour after it's generation, past this time user will need to login again and will receive a new token.
 
 ## `api/v1/users` 👤
 
@@ -163,7 +163,6 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "email": "John Doe",
         "name": "john.doe@example.com",
         "password": "hashedPassword",
-        "exp": 1598607723
     }
     ```
     ```json

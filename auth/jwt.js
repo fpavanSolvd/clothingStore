@@ -1,8 +1,8 @@
 var crypto = require('crypto');
 
 module.exports = function(key) {
-    this.key = key; 
-    
+    this.key = key;
+
     function encodeBase64(str) {
         return new Buffer(str).toString('base64').toString("utf-8");
     }
@@ -10,54 +10,65 @@ module.exports = function(key) {
     function decodeBase64(str) {
         return new Buffer(str, 'base64').toString("utf-8");
     }
-    
+
     function stringify(obj) {
         return JSON.stringify(obj);
     }
 
-    /*Takes head and body encoded as base64 
-     * and return a hash(head + "." + body,secret)  
-     */
+    function generateExpirationTime() {
+        return Math.floor(Date.now() / 1000) + 3600;
+    }
+
     function checkSumGen(head, body) {
-        var checkSumStr = head + "." + body; 
-        var hash = crypto.createHmac('sha256',key);
+        var checkSumStr = head + "." + body;
+        var hash = crypto.createHmac('sha256', key);
         var checkSum = hash.update(checkSumStr)
-                .digest('base64').toString('utf8');
+            .digest('base64').toString('utf8');
         return checkSum;
     }
 
-    var alg = {"alg": "HS256", "typ": "JWT"};
+    var alg = { "alg": "HS256", "typ": "JWT" };
 
     return {
-        encode:(obj) => {
+        encode: (obj) => {
+            obj.exp = generateExpirationTime();
+
             var result = "";
             var header = encodeBase64(stringify(alg));
-            console.log(header);
             result += header + ".";
             var body = encodeBase64(stringify(obj));
-            console.log(body);
             result += body + ".";
 
-            var checkSum = checkSumGen(header,body);
-            result += checkSum; 
+            var checkSum = checkSumGen(header, body);
+            result += checkSum;
             return result;
         },
-        decode:(str) => {
-            var jwtArr = str.split("."); 
+        decode: (str) => {
+            var jwtArr = str.split(".");
             var head = jwtArr[0];
             var body = jwtArr[1];
             var hash = jwtArr[2];
-            var checkSum = checkSumGen(head,body); 
+            var checkSum = checkSumGen(head, body);
 
-            if(hash === checkSum) {
-                console.log("jwt hash: " + hash);
-                console.log("gen hash: " + checkSum);
-                console.log('JWT was authenticated');
-                return JSON.parse(decodeBase64(body));
+            if (hash === checkSum) {
+                var payload = JSON.parse(decodeBase64(body));
+                var currentTime = Math.floor(Date.now() / 1000);
+
+                if (payload.exp && payload.exp > currentTime) {
+                    console.log("JWT hash: " + hash);
+                    console.log("Generated hash: " + checkSum);
+                    console.log('JWT was authenticated and has not expired');
+                    return payload;
+                } else {
+                    console.log('JWT was not authenticated or has expired');
+                    console.log("JWT hash: " + hash);
+                    console.log("Generated hash: " + checkSum);
+                    return false;
+                }
             } else {
                 console.log('JWT was not authenticated');
-                console.log("jwt hash: " + hash);
-                console.log("gen hash: " + checkSum);
+                console.log("JWT hash: " + hash);
+                console.log("Generated hash: " + checkSum);
                 return false;
             }
         }

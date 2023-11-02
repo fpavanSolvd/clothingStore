@@ -1,0 +1,14 @@
+version: "3"
+services:
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: local123
+      POSTGRES_USER: admin
+      POSTGRES_DB: clothingStore
+    ports:
+      - 5432:5432
+  app:
+    image: my-clothing-store
+    ports:
+      - 13000:3000

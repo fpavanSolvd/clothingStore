@@ -484,9 +484,11 @@ This API uses jwt for authentication, this means that once a user is logged in u
     ```json
     {
         "productId": "2",
-        "blue": {
-            "s": 1
-        }
+        "options": {
+                    "blue": {
+                        "s": 1
+                    }
+                } 
     }
     ```
 
@@ -498,9 +500,11 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "products": [
             {
                 "productId": "2",
+                "options": {
                 "blue": {
                     "s": 1
                 }
+                }  
             }
         ]
     }
@@ -534,8 +538,10 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "products": [
             {
                 "productId": "2",
-                "blue": {
-                    "s": 1
+                "options": {
+                    "blue": {
+                        "s": 1
+                    }
                 }
             }
         ]

@@ -120,6 +120,12 @@ This API uses jwt for authentication, this means that once a user is logged in u
     {
         "error": "User with id {id} not found."
     }
+
+    If no accepted properties are included in the request body
+    HTTP 400 BAD REQUEST
+    { 
+        "error": "No valid updates provided" 
+    }
     ```
 
 - ### `POST api/v1/users/register`
@@ -146,9 +152,20 @@ This API uses jwt for authentication, this means that once a user is logged in u
 
     If some part of the request body is invalid or missing
     HTTP 400 BAD REQUEST
+    { 
+        "error": "All required fields must be provided" 
+    }
+
+    If UserType is not admin or customer
+    HTTP 400 BAD REQUEST
     {
         "errors": "UserType must be admin or customer"
     }
+
+    If email already exists
+    HTTP 404 BAD REQUEST
+    { "error": "Email john.doe@example.com already exists" }
+    
     ```
 
 - ### `POST api/v1/users/login`
@@ -160,8 +177,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
     {
         "iss": "fpavanClothingStore",
         "sub": "3",
-        "email": "John Doe",
-        "name": "john.doe@example.com",
+        "email": "john.doe@example.com",
         "password": "hashedPassword",
     }
     ```
@@ -175,7 +191,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
     If some part of the request body is invalid or missing
     HTTP 400 BAD REQUEST
     {
-        "errors": "Request must include email and password along with jwt payload requirements: sub, iss, exp"
+        "errors": "Request must include email and password along with jwt payload requirements: sub and iss"
     }
 
     If email and/or password are incorrect

@@ -1,9 +1,20 @@
 const express = require('express');
 const pool = require('./db');
 const fs = require('fs');
+const bodyParser = require('body-parser');
+const userRouter = require('./routers/userRouter');
+
 const port = 3000;
 
 const app = express();
+
+const router = express.Router();
+
+app.use(bodyParser.json());
+
+router.use('/users', userRouter);
+
+app.use('/api/v1', router);
 
 app.get('/setup', async (req, res) => {
   try {

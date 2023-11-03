@@ -339,7 +339,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
 
     Adds a new product and returns created item along with the `id` generated when the product is saved in the database.
 
-    Request body should include required properties: id, category, price. Products can be created without options, which can be added later.
+    Request body should include required properties: category, price. Products are created without options, which can be added later.
     Example:
     ```json
     {

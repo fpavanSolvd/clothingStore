@@ -3,6 +3,7 @@ const pool = require('./db');
 const fs = require('fs');
 const bodyParser = require('body-parser');
 const userRouter = require('./routers/userRouter');
+const productRouter = require('./routers/productRouter');
 
 const port = 3000;
 
@@ -13,6 +14,7 @@ const router = express.Router();
 app.use(bodyParser.json());
 
 router.use('/users', userRouter);
+router.use('/products', productRouter);
 
 app.use('/api/v1', router);
 

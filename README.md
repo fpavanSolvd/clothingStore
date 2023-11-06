@@ -42,7 +42,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
 
     | Query Param   | Type   | Required | Description | Example |
     | ------------- | ------ | :------: | ----------- | ------- |
-    | `userType`        | String | No     | If you want to filter by a specific  user type, you can specify it | `api/v1/users?userType=admin`
+    | `role`        | String | No     | If you want to filter by a specific  user type, you can specify it | `api/v1/users?role=admin`
 
     ```json
     HTTP 200 OK
@@ -51,13 +51,13 @@ This API uses jwt for authentication, this means that once a user is logged in u
             "id": "1",
             "name": "Sam Thompson",
             "email": "sam.thompson@example.com",
-            "userType": "admin"
+            "role": "admin"
         },
         {
             "id": "2",
             "name": "Sara Perez",
             "email": "sara.perez@example.com",
-            "userType": "customer"
+            "role": "customer"
         }
     ]
     ```
@@ -78,7 +78,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "id": "1",
         "name": "Sam Thompson",
         "email": "sam.thompson@example.com",
-        "userType": "admin"
+        "role": "admin"
     }
 
     If user is not found
@@ -112,7 +112,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "id": "1",
         "name": "Sam Thompson",
         "email": "sam_thompson@example.com",
-        "userType": "admin"
+        "role": "admin"
     }
 
     If user is not found
@@ -138,7 +138,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "name": "John Doe",
         "email": "john.doe@example.com",
         "password": "hashedPassword",
-        "userType": "customer",
+        "role": "customer",
     }
     ```
     ```json
@@ -147,7 +147,7 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "id": "3",
         "name": "John Doe",
         "email": "john.doe@example.com",
-        "userType": "customer"
+        "role": "customer"
     }
 
     If some part of the request body is invalid or missing
@@ -156,10 +156,10 @@ This API uses jwt for authentication, this means that once a user is logged in u
         "error": "All required fields must be provided" 
     }
 
-    If UserType is not admin or customer
+    If role is not admin or customer
     HTTP 400 BAD REQUEST
     {
-        "errors": "UserType must be admin or customer"
+        "errors": "role must be admin or customer"
     }
 
     If email already exists

@@ -1,6 +1,6 @@
 const express = require('express');
 const productRouter = express.Router();
-const pool = require('../db');
+const pool = require('../database/db');
 const authMiddleware = require('../auth/authMiddleware'); 
 
 productRouter.use((req, res, next) => authMiddleware.checkToken(req, res, next));
@@ -85,7 +85,7 @@ productRouter.get('/:productId', async (req, res) => {
 productRouter.put('/:productId', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -154,7 +154,7 @@ productRouter.put('/:productId', async (req, res) => {
 productRouter.post('/', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -212,7 +212,7 @@ productRouter.post('/', async (req, res) => {
 productRouter.delete('/:productId', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -262,7 +262,7 @@ productRouter.delete('/:productId', async (req, res) => {
 productRouter.post('/:productId/options', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -335,7 +335,7 @@ productRouter.post('/:productId/options', async (req, res) => {
 productRouter.delete('/:productId/options/:color', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }

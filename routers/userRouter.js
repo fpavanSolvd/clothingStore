@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('../db');
+const pool = require('../database/db');
 const jwt = require('../auth/jwt');
 const authMiddleware = require('../auth/authMiddleware');
 let config = require('../config'); 
@@ -19,19 +19,19 @@ userRouter.use((req, res, next) => {
 userRouter.get('/', async (req, res) => {
     try {
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
 
-        const userType = req.query.userType;
+        const role = req.query.role;
   
-        let query = 'SELECT user_id, name, email, user_type FROM users';
+        let query = 'SELECT user_id, name, email, role FROM users';
         const values = [];
   
-        if (userType) {
-            query += ' WHERE user_type = $1';
-            values.push(userType);
+        if (role) {
+            query += ' WHERE role = $1';
+            values.push(role);
         }
   
         const result = await pool.query(query, values);
@@ -48,12 +48,12 @@ userRouter.get('/:userId', async (req, res) => {
 
         const userId = req.params.userId;
     
-        if (req.decoded.userType != "admin" && req.decoded.userId != userId) {
+        if (req.decoded.role != "admin" && req.decoded.userId != userId) {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
 
-        const query = 'SELECT user_id, name, email, user_type FROM users WHERE user_id = $1';
+        const query = 'SELECT user_id, name, email, role FROM users WHERE user_id = $1';
         const values = [userId];
     
         const result = await pool.query(query, values);
@@ -73,7 +73,7 @@ userRouter.put('/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
 
-        if (req.decoded.userType != "admin" && req.decoded.userId != userId) {
+        if (req.decoded.role != "admin" && req.decoded.userId != userId) {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -120,15 +120,15 @@ userRouter.put('/:userId', async (req, res) => {
 
 userRouter.post('/register', async (req, res) => {
     try {
-        const { name, email, password, userType } = req.body;
+        const { name, email, password, role } = req.body;
   
-        if (!name || !email || !password || !userType) {
+        if (!name || !email || !password || !role) {
             res.status(400).json({ error: 'All required fields must be provided' });
             return;
         }
 
-        if (userType !== 'admin' && userType !== 'customer') {
-            res.status(400).json({ error: 'UserType must be admin or customer' });
+        if (role !== 'admin' && role !== 'customer') {
+            res.status(400).json({ error: 'role must be admin or customer' });
             return;
         }
   
@@ -140,8 +140,8 @@ userRouter.post('/register', async (req, res) => {
             return;
         }
   
-        const insertQuery = 'INSERT INTO users (name, email, password, user_type) VALUES ($1, $2, $3, $4) RETURNING *';
-        const insertValues = [name, email, password, userType];
+        const insertQuery = 'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *';
+        const insertValues = [name, email, password, role];
         const result = await pool.query(insertQuery, insertValues);
   
         res.status(201).json(result.rows[0]);
@@ -175,7 +175,7 @@ userRouter.post('/login', async (req, res) => {
             sub: sub,
             email: email,
             userId: result.rows[0].user_id,
-            userType: result.rows[0].user_type
+            role: result.rows[0].role
         };
     
         const token = jwt(config.secret).encode(payload);
@@ -191,7 +191,7 @@ userRouter.delete('/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
     
-        if (req.decoded.userType != "admin" && req.decoded.userId != userId) {
+        if (req.decoded.role != "admin" && req.decoded.userId != userId) {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }

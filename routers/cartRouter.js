@@ -1,5 +1,5 @@
 const express = require('express');
-const pool = require('../db');
+const pool = require('../database/db');
 const authMiddleware = require('../auth/authMiddleware');
 
 const cartRouter = express.Router();
@@ -10,7 +10,7 @@ cartRouter.post('/:userId', async (req, res) => {
     try {
         const userId = req.params.userId;
         
-        if (req.decoded.userType != "admin" && req.decoded.userId != userId) {
+        if (req.decoded.role != "admin" && req.decoded.userId != userId) {
             res.status(403).json({ error: 'Access denied. You are not an admin.' });
             return;
         }
@@ -43,7 +43,7 @@ cartRouter.put('/:cartId', async (req, res) => {
 
         const checkCartQuery = 'SELECT * FROM cart WHERE cart_id = $1';
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             checkCartQuery += ' AND user_id = $2';
             params.push(req.decoded.userId);
         }
@@ -73,7 +73,7 @@ cartRouter.get('/:cartId', async (req, res) => {
 
         const checkCartQuery = 'SELECT * FROM cart WHERE cart_id = $1';
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             checkCartQuery += ' AND user_id = $2';
             params.push(req.decoded.userId);
         }
@@ -103,7 +103,7 @@ cartRouter.delete('/:cartId', async (req, res) => {
 
         const checkCartQuery = 'SELECT * FROM cart WHERE cart_id = $1';
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             checkCartQuery += ' AND user_id = $2';
             params.push(req.decoded.userId);
         }
@@ -128,7 +128,7 @@ cartRouter.delete('/:cartId/buy', async (req, res) => {
 
         const checkCartQuery = 'SELECT * FROM cart WHERE cart_id = $1';
 
-        if (req.decoded.userType != "admin") {
+        if (req.decoded.role != "admin") {
             checkCartQuery += ' AND user_id = $2';
             params.push(req.decoded.userId);
         }

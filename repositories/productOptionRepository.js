@@ -47,7 +47,7 @@ module.exports.delete = async (productId, color, size) => {
         await client.query('BEGIN');
 
         if (size) {
-            const deleteSizeQuery = 'DELETE FROM product_option WHERE product_id = $1 AND color = $2 AND size = $3 RETURNING *';
+            const deleteSizeQuery = 'DELETE FROM product_option WHERE product_id = $1 AND color = $2 AND size = $3 RETURNING (option_id, product_id, color, size, stock)';
             const deleteSizeResult = await client.query(deleteSizeQuery, [productId, color, size]);
 
             if (deleteSizeResult.rows.length === 0) {

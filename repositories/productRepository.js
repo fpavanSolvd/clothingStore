@@ -77,7 +77,7 @@ module.exports.update = async (productId, properties) => {
         await client.query('BEGIN');
 
         if (price) {
-            const updateProductQuery = 'UPDATE product SET price = $1 WHERE product_id = $2 RETURNING *';
+            const updateProductQuery = 'UPDATE product SET price = $1 WHERE product_id = $2 RETURNING (product_id, price)';
             const updateProductValues = [price, productId];
             const updateProductResult = await client.query(updateProductQuery, updateProductValues);
 

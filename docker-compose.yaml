@@ -7,8 +7,8 @@ services:
       POSTGRES_USER: admin
       POSTGRES_DB: clothingStore
     ports:
-      - 5432:5432
+      - '5432:5432'
   app:
     image: my-clothing-store
     ports:
-      - 13000:3000
+      - '13000:3000'

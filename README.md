@@ -28,6 +28,11 @@ Create an online clothing store where customers can search for specific clothing
   - [`GET api/v1/carts/:cartId`](#get-apiv1cartscartId)
   - [`DELETE api/v1/carts/:cartId`](#DELETE-apiv1cartscartId)
   - [`DELETE api/v1/carts/:cartId/buy`](#delete-apiv1cartscartIdbuy)
+- [`api/v1/categories`](#apiv1categories-)
+  - [`GET api/v1/categories`](#get-apiv1categories)
+  - [`GET api/v1/categories/:categoryId`](#get-apiv1categoriescategoryId)
+  - [`POST api/v1/categories`](#post-apiv1categories)
+  - [`DELETE api/v1/categories/:categoryId`](#delete-apiv1categoriescategoryId)
 
 
 ## Authentication
@@ -587,5 +592,97 @@ This API uses jwt for authentication, this means that once a user is logged in u
     HTTP 404 NOT FOUND
     {
         "error": "Cart with id {id} not found."
+    }
+    ```
+
+## `api/v1/categories` 🛍️
+
+### `GET api/v1/categories`
+
+    Returns all categories.
+
+    ```json
+    HTTP 200 OK
+    [
+        {
+            "id": "1",
+            "description": "dress",
+        },
+        {
+            "id": "2",
+            "description": "shirt",
+        }
+    ]
+    ```
+
+### `GET api/v1/categories/:categoryId`
+
+    Returns a specific category.
+
+    | Request Param | Type   | Required | Description |
+    | ------------- | ------ | :------: | ----------- |
+    | `categoryId`        | String | Yes     | Id of the category |
+
+
+    ```json
+    Example api/v1/category/1
+    HTTP 200 OK 
+    {
+        "id": "1",
+        "description": "dress",
+    }
+
+    If category is not found
+    HTTP 404 NOT FOUND
+    {
+        "error": "Category with id {id} not found."
+    }
+    ```
+
+### `POST api/v1/categories`
+    Creates a new category.
+    
+    Body should include required properties. Only users with the admin role can do this.
+
+    ```json
+    {
+       "description": "pants"
+    }
+    ```
+
+    ```json
+    HTTP 200 OK
+    {
+        "id": "3",
+        "description": "pants"
+    }
+
+    If some part of the request body is invalid or missing
+    HTTP 400 BAD REQUEST
+    { 
+        "error": "Category description not specified" 
+    }
+
+    If category already exists
+    HTTP 404 BAD REQUEST
+    { "error": "Category pants already exists" }
+    
+    ```
+
+### `DELETE api/v1/categories/:categoryId`
+
+    Deletes a given category. Only users with the admin role can do this.
+
+    | Request Param | Type   | Required | Description |
+    | ------------- | ------ | :------: | ----------- |
+    | `category`        | String | Yes     | Id of the category | 
+
+    ```json
+    HTTP 204 NO CONTENT
+
+    If user not found
+    HTTP 404 NOT FOUND
+    {
+        "error": "Category with id {id} not found."
     }
     ```

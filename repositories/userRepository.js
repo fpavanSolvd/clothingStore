@@ -89,7 +89,7 @@ module.exports.updateUser = async (userId, name, email, password) => {
 }
 
 module.exports.insertUser = async (name, email, password, role) => {
-    const insertQuery = 'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *';
+    const insertQuery = 'INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING (user_id, name, email, password, role)';
     const insertValues = [name, email, password, role];
     try {
         const result = await pool.query(insertQuery, insertValues);

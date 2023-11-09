@@ -1,4 +1,3 @@
-const { json } = require('body-parser');
 const pool = require('../database/db');
 
 module.exports.create = async (userId) => {

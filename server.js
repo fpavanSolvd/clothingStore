@@ -18,5 +18,5 @@ router.use('/categories', categoryRouter);
 app.use('/api/v1', router);
 
 app.listen(port, async () => {
-  console.log(`Server has started on port: ${port}`);
+	console.log(`Server has started on port: ${port}`);
 });

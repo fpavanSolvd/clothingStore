@@ -5,13 +5,13 @@ const userController = require('../controllers/userController');
 const userRouter = express.Router();
 
 userRouter.use((req, res, next) => {
-    const excludedRoutes = ['/login', '/register'];
+	const excludedRoutes = ['/login', '/register'];
   
-    if (!excludedRoutes.includes(req.path)) {
-        authMiddleware.checkToken(req, res, next);
-    } else {
-        next();
-    }
+	if (!excludedRoutes.includes(req.path)) {
+		authMiddleware.checkToken(req, res, next);
+	} else {
+		next();
+	}
 });
 
 userRouter.get('/', userController.getUsers);

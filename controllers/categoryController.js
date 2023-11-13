@@ -37,11 +37,13 @@ module.exports.create = async (req, res) => {
         const description = req.body.description;
         if (!description) {
             res.status(400).json({ error: 'Category description not specified' });
+            return;
         }
 
         const existingDescription = await categoryRepository.getByDescription(description);
         if (existingDescription) {
             res.status(400).json({ error: `Category ${description} already exists` });
+            return;
         }
 
         const newCategory = await categoryRepository.create(description);

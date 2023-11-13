@@ -6,7 +6,7 @@ module.exports.getProducts = async (req, res) => {
         
         const products = await productRepository.getAll(req.query);
   
-        res.status(200).json(formatProducts(products));
+        res.status(200).json(this.formatProducts(products));
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error listing products' });
@@ -22,7 +22,7 @@ module.exports.getProduct = async (req, res) => {
         if (product.length === 0) {
             res.status(404).json({ error: `Product with id ${productId} not found` });
         } else {
-            res.status(200).json(formatProducts(product));
+            res.status(200).json(this.formatProducts(product));
         }
     } catch (error) {
         console.error('Error fetching product:', error);
@@ -40,7 +40,7 @@ module.exports.updateProduct = async (req, res) => {
 
         const productId = req.params.productId;
     
-        const product = productRepository.getById(productId);
+        const product = await productRepository.getById(productId);
     
         if (product.length === 0) {
             res.status(404).json({ error: `Product with id ${productId} not found` });
@@ -72,7 +72,7 @@ module.exports.createProduct = async (req, res) => {
             return;
         }
         const product = await productRepository.create(category, price);
-        res.status(201).json(formatProducts(product));
+        res.status(201).json(this.formatProducts(product));
 
     } catch (error) {
         console.error(error);
@@ -125,7 +125,7 @@ module.exports.createOption = async (req, res) => {
         await productOptionRepository.create(productId, options);
         const updatedProduct = await productRepository.getById(productId);
 
-        res.status(200).json(formatProducts(updatedProduct));
+        res.status(200).json(this.formatProducts(updatedProduct));
 
     } catch (error) {
         console.error(error);
@@ -145,7 +145,7 @@ module.exports.deleteOption = async (req, res) => {
         const color = req.params.color;
         const size = req.query.size;
     
-        const product = productRepository.getById(productId);
+        const product = await productRepository.getById(productId);
     
         if (product.length === 0) {
             res.status(404).json({ error: `Product with id ${productId} not found` });
@@ -161,7 +161,7 @@ module.exports.deleteOption = async (req, res) => {
     }
 }
 
-const formatProducts = (products) => {
+module.exports.formatProducts = (products) => {
     let result = new Map();
 
     if (!Array.isArray(products)) {
